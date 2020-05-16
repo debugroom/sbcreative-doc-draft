@@ -1,0 +1,416 @@
+:lang: ja
+:doctype: book
+:toc: left
+:toclevels: 3
+:toc-title: 目次
+:sectnums:
+:sectnumlevels: 4
+:sectlinks:
+:imagesdir: ./images
+:icons: font
+:source-highlighter: coderay
+:example-caption: Example
+:table-caption: Table
+:figure-caption: Figure
+:docname: = 2-1.AWS
+:revnumber: 0.1
+:revdate: 2020/5/16
+
+= AWSの概要
+
+AWSはAmazon.comにより提供されている世界最大級のクラウドコンピューティングサービスです。この章ではAWSに関する前提知識やクラウドサービスの全体像について説明していきます。
+
+== AWSが提供するクラウドコンピューティングサービス
+
+クラウドコンピューティングという用語は、2006年にGoogleの当時CEOであるエリック・シュミットにより提唱されたのが最初だと言われています。
+クラウドコンピューティングとは仮想化技術を駆使して、サーバリソースをオンデマンドかつ柔軟に提供するサービスです。
+
+従来、企業がITサービスを提供するためには、自社でデータセンタを作り、ITインフラのハードウェアを調達し、ITシステムを構築・運用する形態が主流でした。このような形態はオンプレミスと呼ばれます。
+
+.クラウドコンピューティングとオンプレミスの違い
+image::cloud-computing.png[]
+
+大規模な企業では、その事業運営に必要な基幹システムや情報システム、コンシューマ向けのWebサイト、SAPなどのアプリケーションパッケージソフト、スクラッチ(業務に応じて個別に開発する)アプリケーションなど
+幅広くITサービスを運営するために自社でデータセンタを構築する一方で、それほどIT化が必要とされていない業務が主体の企業や中小規模の企業では、
+用途に応じて、レンタルサーバによるWebサイト運用や、Salesforce.comなどのASP(Application Service Provider:アプリケーションサービスプロバイダ)を
+活用して、自社や顧客向けにITサービスを提供していました。
+
+AWSは、このような中で、Amazon.comが自社のサーバリソースをサービスとして提供し始めたことに端を発します。
+Amazon.comもECサイトの運営で、高額な費用を使って、自社のデータセンタに膨大なサーバリソースを抱えていましたが、クリスマス商戦の時期などを除き、過剰なサーバリソースを持て余していました。
+そこで、Amazon.comは、繁盛期以外に余剰なサーバリソースを他社向けにサービスとして提供することを考えます。
+これがAWS、すなわちAmazon Web Serviceの始まりであり、2004年にSQS(Simple Queue Service)を提供したことを皮切りに、
+2006年には中核となるEC2(Elastic Compute Cloud)をパブリックベータとしてリリースし、クラウドベンダの先駆けとしてスタートしました。
+
+このようにサーバリソースをサービスとして提供することは、仮想化技術が根幹を成しています。仮想化とは、シンプルに言えば、従来一つの物理サーバにOS
+(Operating System:オペレーティングシステム)が実行されていたところ、ハイパーバイザと呼ばれるソフトウェアを使って、
+仮想的に複数のOSを実行する技術です。仮想化技術はVMwareが代表的なプロダクトですが、この技術により１つの物理マシンで複数のサーバ環境を構築できることになります。
+この技術を活用することにより、不特定多数にサーバリソースを効率的にサービスとして提供することが可能になりました。
+
+image::vmware.png[]
+
+かくして、サーバを購入せずとも、また、レンタルサーバやASPよりも柔軟にITサービスを構築し提供できる、いわばレンタルデータセンタとなるクラウドコンピューティングサービスが普及していきます。
+現在では、そのサービス提供形態により以下のようにカテゴライズされます。
+
+[cols="3,7"]
+|===
+|カテゴリ|概要
+|パブリッククラウド|主にインターネット経由で提供されるクラウドコンピューティングサービスです。
+提供するサービスの内容によって、単純にサーバリソースを提供するIaas(Infrastructure as a Serivce)、
+アプリケーションの土台となるプラットフォームをサービスとして提供するPaas(Platform as a Service)、
+使用するアプリケーションを含めてサービスとして提供するSaas(Service as a Service)といったかたちで分類されます。
+IaaSベンダとしては、AWSを始め、Microsoft Azure、Google Cloup Platform(GCP)やIBM Cloud、Oracle Cloud Platform(OCP)があります。
+PaaSベンダは、Salesforce.comが提供するHerokuやPivotal社が提供するPivotal Application Service、オープンソースソフトウェアのCloudFoundry、
+SaaSベンダは、Salesforce.comが提供するForce.comなどが代表的です。
+|プライベートクラウド|企業が仮想化技術を使用してクラウドコンピューティングと同等の環境を自社内に構築・設置し、
+イントラネットなどを経由してユーザー部門が利用する形態です。OpenStackなどのオープンソースソフトウェアを用いて、
+自社で構築したデータセンタやサーバ上にパブリッククラウドと同様の環境を構築します。
+なお、特定のベンダが個別企業向けにクラウド環境をプライベートなサービスとして提供する形態もあります。
+パブリッククラウドと比較して投資や運用管理が必要な反面、セキュリティや資産保護を強化できます。
+|ハイブリッドクラウド|上記のパブリッククラウドとプライベートクラウドを組み合わせた形態です。
+業務、データ、セキュリティ等の要件に応じた使い分け・連携が可能です。
+|===
+
+AWSは、パブリッククラウドの市場で2020年5月現在で世界No1のシェアを獲得しています。
+PaaSやSaaSをサービスとして提供しているプロバイダでも実行している物理環境はAWSのクラウド環境を利用しているケースは少なくありません。
+次節以降、AWSが提供するクラウド環境について見ていきましょう。
+
+== AWSが展開するリージョンとアベイラビリティゾーン
+
+AWSのクラウド環境は、多数のサーバが運用されている、1つ以上のデータセンタから構成されるアベイラビリティゾーンと、複数のアベイラビリティゾーンおよびトランジットからなるリージョン単位で構成されています。
+
+.リージョンとアベイラビリティゾーンの構成
+image::region-availabilityzone.png[]
+
+アベイラビリティゾーンの間は複数の冗長化されたネットワークで接続されており、被災を考慮してデータセンタの物理的なロケーションを隔離しつつも、
+相互の通信遅延が2ms未満となるよう、100km以内で立地しています。アベイラビリティゾーンへの接続はトランジットと呼ばれるデータセンタを経由して、
+他のAWSリージョンや企業のオンプレミス環境、インターネットへ接続されます。
+
+AWSは2020年5月現在、AWSは以下の全世界23の地域(リージョン)に、クラウドサービスを展開しています。
+各リージョンは各々を識別するリージョンコードを持っています。リージョン(設置エリア)とリージョンコードは以下の通りです。
+
+|===
+|リージョン(設置都市)|リージョンコード
+|米国東部（バージニア北部）|us-east-1
+|米国東部 (オハイオ)|us-east-2
+|米国西部 (北カリフォルニア)|us-west-1
+|米国西部 (オレゴン)|us-west-2
+|米国西部 (GovCloud)|-
+|アフリカ (ケープタウン)|af-south-1
+|アジアパシフィック (香港)|ap-east-1
+|アジアパシフィック (東京)|ap-northeast-1
+|アジアパシフィック (ソウル)|ap-northeast-2
+|アジアパシフィック (大阪: ローカル)|ap-northeast-3
+|アジアパシフィック (北京)|-
+|アジアパシフィック (寧夏)|-
+|アジアパシフィック (ムンバイ)|ap-south-1
+|アジアパシフィック (シンガポール)|ap-southeast-1
+|アジアパシフィック (シドニー)|ap-southeast-2
+|カナダ (中部)|ca-central-1
+|欧州 (フランクフルト)|eu-central-1
+|欧州 (アイルランド)|eu-west-1
+|欧州 (ロンドン)|eu-west-2
+|欧州 (パリ)|eu-west-3
+|欧州 (ストックホルム)|eu-north-1
+|中東 (バーレーン)|me-south-1
+|南米 (サンパウロ)|sa-east-1
+|===
+
+[NOTE]
+====
+* GovCloudは米国政府専用のリージョンで一般ユーザは利用できません。同様に中国リージョンも使用できません。これらは専用のアカウントにより利用されます。
+* 2019年 3月 20日より後に導入されたリージョン(ケープタウンや香港、バーレーン)を使用するには、そのリージョンをマネージメントコンソールで有効にする必要があります。
+* 大阪リージョンは、東京リージョンとの併用が前提であり、利用ユーザや使用できる機能を限定したローカルリージョンでしたが、2021年に通常のリージョンとしてサービス提供される予定です。
+====
+
+== AWSが展開するエッジロケーション・リージョンエッジキャッシュ
+
+AWSでは、上述のリージョンに加え、アクセス速度の向上のため、42ヵ国84都市にある216箇所にエッジロケーションおよびリージョンエッジキャッシュと呼ばれるデータセンタを構築しています。
+日本では東京リージョンおよび大阪リージョンに複数配置されており、これらはCloudFrontなどのコンテンツ配信ネットワーク(CDN:Content Delivery Network)サービスを利用すると
+物理的な場所に応じて、最も早く接続可能なデータセンタに配置されたサーバにアクセスされます。
+
+.エッジロケーションfootnote:[https://aws.amazon.com/jp/cloudfront/features/]
+image::edge-location.png[]
+
+
+== AWSが展開するサービスの一覧
+
+AWSではこうしたクラウド環境で提供されるサーバリソースを有効活用するための様々なサービスを提供しています。
+サービスは全てAPIが提供されており、後述するマネージメントコンソールなどの方法で
+APIがコールされることでサービスが実行されます。2020年5月時点で提供されているサービスの一覧と概要を、カテゴリごとに50音順で示します。
+AWSサービスの中で中核となるサービスや、使用頻度の高いものは、本書で詳細な解説を扱いますが、インデックスとして記載章を併記しているので、特定のサービスを詳しく知りたい場合は
+解説インデックスもとに、詳細を参照してください。
+
+[cols="1,1,2,1"]
+|===
+|カテゴリ|サービス|概要|解説インデックス
+.14+|コンピューティング|AWS Batch|Dockerコンテナを利用したバッチ実行サービス。|3-3.エンタープライズアプリケーション
+|Amazon EC2(Elastic Compute Cloud)|任意のOSで仮想的にサーバ環境を構築・利用できるサービス。|3-2.Webアプリケーション
+|Amazon ECR(Elastic Container Registry)|Dockerコンテナイメージ管理するマネージドサービス。|3-4.コンテナアプリケーション
+|Amazon ECS(Elastic Container Service)|マネージドコンテナオーケストレーションサービス。|3-4.コンテナアプリケーション
+|Amazon EKS(Elastic Kubernetes Service)|オープンソースソフトウェアKubernetesを利用したマネージドコンテナオーケストレーションサービス。|3-4.コンテナアプリケーション
+|AWS Elastic Beanstalk|アプリケーションを自動でデプロイするサービス。|3-2.Webアプリケーション
+|Amazon EC2 Image Builder|EC2で動作するOSのアップデートを最新化するサービス。|
+|AWS Lambda|定義したアプリケーションコードをサーバなしで実行するサービス。|3-5.サーバレスアプリケーション
+|AWS Launch Wizard|Microsoft SQL ServerやSAPアプリケーションを簡単にデプロイするサービス。|
+|Amazon Lightsail|WordPressなどのWebサイトやGitLab、Redmineなどのツールを、メモリやCPU、ストレージ別に固定費でまとめたパッケージでインスタンス構築するサービス。|
+|AWS Outposts|オンプレミス環境に、AWSのAPIが実行可能なハードウェアを導入するサービス|
+|AWS ParallelCluster|科学技術計算などでよく用いられるHPC(High Performance Computing)環境をAWS上に構築するツール|
+|AWS SAM(Serverless Application Model)|サーバレスアプリケーションを簡単に実装するためのCLIおよびオープンソースフレームワーク。CloudFormationを拡張したSAMテンプレートを作成することで、API GatewayやLambda、DynamoDBなどの環境を簡易構築できる。|3-5.サーバレスアプリケーション
+|AWS Severless Application Repository|サーバレスアプリケーションを共有・公開するためのレポジトリサービス。|
+.10+|ネットワーキングとコンテンツ配信|Amazon API Gateway|APIの作成、公開を行うサービス。|3-5.サーバレスアプリケーション
+|AWS App Mesh|オープンソースEnvoyを利用して、ECSやEKSなどに構築したサービス間で通信を行うサービスメッシュ。|
+|AWS Cloud map|EC2、ECS、S3、SQSなどのAWSリソースを含めたサービスディスカバリ。|
+|Amazon CloudFront|静的コンテンツキャッシュなどを実現するCDN(Content Delivery Network:コンテンツ配信ネットワーク)サービス。|3-1.静的ホスティングWebサイト
+|AWS Direct Connect|オンプレミスとの専用線接続サービス|3-3.エンタープライズアプリケーション
+|ELB(Elastic Load Balancing)|ALB(Application Load Balancer)、CLB(Classic Load Balancer)、NLB(Network Load Balancer)の３種類をオプションで選択できるマネージドロードバランシングサービス|3-2.Webアプリケーション、3-3.エンタープライズアプリケーション
+|AWS Global Accelerator|高速なAWSのネットワークを利用してインターナルなALBやEC2へアクセスするためのサービス|3-3.エンタープライズアプリケーション
+|Amazon Route 53|ドメインの登録、DNSルーティング、ヘルスチェックなどを行うDNSサービス|3-1.静的ホスティングWebサイト、3-3.エンタープライズアプリケーション
+|Amazon VPC(Virtual Private Cloud)|AWS内にプライベートな仮想ネットワークやサブネットを構築するサービス|3-2.Webアプリケーション、3-3.エンタープライズアプリケーション
+|AWS VPN|IPsec通信を使用したサイト間をつなぐSite to Site VPNと、OpenVPNクライアントを利用したClient VPNサービス|3-3.エンタープライズアプリケーション
+.8+|ストレージ
+|AWS Backup|定義したポリシーを元に、EBSボリュームやRDS、EFS、DynamoDB、StorageGatewayなどのバックアップを実行するサービス|
+|Amazon EBS(Elastic Block Store)|EC2用マウントストレージ|3-3.エンタープライズアプリケーション
+|Amazon EFS(Elastic File System)|マルチアベイラビリティゾーンで利用可能なネットワーク共有EC2用マウントストレージ|3-4.コンテナアプリケーション
+|Amazon FSx(File System)|ビジネスアプリケーション向けの Amazon FSx for Windows File Serverと、高性能ワークロード向けの Amazon FSx for Lustreファイルシステム|
+|Amazon S3(Simple Storage Service)|ログ保存、バックアップ、静的ホスティング等多様な用途のオンラインストレージ|3-1.静的ホスティングWebサイト、3-4.コンテナアプリケーション
+|Amazon S3 Glacier|S3でのアーカイブ用途低コストオンラインストレージ|3-3.エンタープライズアプリケーション
+|AWS Snowball|オンプレミスからクラウドへデータを物理移送するマイグレーションサポートサービス|
+|AWS Storage Gateway|オンプレミス向けストレージ|
+.9+|データベース|Amazon Aurora|クラウド環境最適化リレーショナルデータベース|3-4.コンテナアプリケーション
+|Amazon DocumentDB|オープンソースデータベースMongoDBとの互換性をもつドキュメント指向データベース|
+|Amazon DynamoDB|スケーラブルな特性をもつ、NoSQLスキーマレスデータベース|3-4.コンテナアプリケーション
+|Amazon ElastiCache|オープンソースソフトウェアMemcachedおよびRedisを利用したキャッシュ向けデータベース|3-4.コンテナアプリケーション
+|Amazon Keyspaces(for Apache Cassandra)|オープンソースデータベースApache Cassadraを利用したマネージドスケーラブルNoSQLデータベース|
+|Amazon Neptune|マネージドグラフ型データベース|
+|Amazon QLDB|フルマネージド台帳型データベース|
+|Amazon RDS(Relational Database Service)|オープンソースおよびプロプライエタリのマネージドリレーショナルデータベース|3-2.Webアプリケーションk、3-3.エンタープライズアプリケーション
+|Amazon Redshift|ビッグデータ解析用データウェアハウス|3-7.データアナリティクス/ビッグデータ解析
+.7+|アプリケーション統合|Amazon AppFlow|Salesforce、SlackなどのSaaSアプリケーションとS3、Redshiftなどにデータを連携するサービス|
+|Amazon EventBridge|DatadogなどのSaaSやカスタムアプリケーションとAWSサービス間でイベントデータを連携するサービス|
+|Amazon MQ(Message Queue)|オープンソースソフトウェアApache ActiveMQを利用したマネージドメッセージブローカーサービス|
+|Amazon SNS(Simple Notification Service)|スケーラブルなプッシュ配信型メッセージ送信|3-6.DevOps
+|Amazon SQS(Simple Queue Service)|スケーラブルな完全マネージド型メッセージキューサービス|3-3.エンタープライズアプリケーション
+|AWS StepFunctions|AWS Lambdaで定義した関数をワークフロー式に実行するためのサービス|
+|Amazon SWF(Simple Workflow)|AWS Flow Frameworkというフレームワークを用いて、JavaおよびRuby言語でバッチタスクをワークフローで実行するためのフルマネージドサービス|
+.12+|分析|Amazon Athena|S3に保存されたデータに対してSQLを発行してデータを取得・分析できるサービス|3-7.データアナリティクス/ビッグデータ解析
+|Amazon CloudSearch|Webサイトやアプリケーション向けのマネージド検索エンジンサービス。|
+|AWS Data Exchange|サードパーティから提供される様々なデータをS3に取り込むことができるサービス|
+|AWS Data Pipeline|RDSやS3にあるデータを定期的に移送・ETL処理などワークフローで自動実行するサービス|
+|Amazon Elasticsearch Service|オープンソースの検索・分析エンジンElasicsearch、Kibana、Logstashのマネージドサービス|3-3.エンタープライズアプリケーション
+|Amazon EMR(Elastic Map Reduce)|オープンソースのApache Spark、Apache Hive、Apache HBase、Apache Flink、Apache Hudi、Prestoといったビッグデータ処理プラットフォームのマネージドサービス。|3-7.データアナリティクス/ビッグデータ解析
+|Amazon Glue|S3やAurora、RDS、Redshiftなどからデータを抽出・変換・ロードを行うマネージドサービス|3-7.データアナリティクス/ビッグデータ解析
+|Amazon Kinesis|ストリーミングデータをリアルタイムで収集、処理、分析するマネージドサービス。データストアにストリームデータをロードするKinesis Data Firehose、データストリームのキャプチャ、処理、保存するKinesis Data Streams、SQL や Java でデータストリームを分析するKinesis Data Analytics、ストリーミング動画のキャプチャ、処理、保存するKinesis Video Streamsがある。|3-7.データアナリティクス/ビッグデータ解析
+|Amazon Lake Formation|S3をベースとしたデータレイクの構築、Glueを使って、データ抽出・クレンジング・クエリなどのワークフローの作成・実行を行うサービス|
+|Amazon MSK(Managed Streaming for Apache Kafka)|オープンソースのApache Kafkaを利用したマネージド分散メッセージングサービス|
+|Amazon QuickSight|様々なデータストアの可視化が可能なフルマネージドBI(Business Intelligence:ビジネス分析)サービス|3-7.データアナリティクス/ビッグデータ解析
+|Amazon Redshift|PostgreSQLをベースとしたデータウェアハウスサービス|3-7.データアナリティクス/ビッグデータ解析
+.8+|開発者用ツール|Cloud9|ブラウザベースのIDE(Integrated Develop Environment:統合開発環境)|3-13.開発環境
+|AWS CodeBuild|クラウド環境における継続的インテグレーションを実現するビルドサービス|3-6.DevOps
+|AWS CodeCommit|マネージドGitレポジトリサービス|3-6.DevOps
+|AWS CodeDeploy|EC2へインスタンスへのアプリケーションデプロイ自動化サービス|3-6.DevOps
+|AWS CodePipeline|コードのビルド、テスト、デプロイまでのワークフローをパイプラインとして定義、実行できる継続デリバリを実現するサービス|3-6.DevOps
+|AWS CodeStar|様々なプラグラミング言語の開発プロジェクトテンプレートに従って、CodePipelineやCodeBuildなどのプロジェクトを自動生成するサービス|
+|AWS SDK|様々なプログラミング言語からAWS APIにアクセスするためのライブラリ|3-13.開発環境
+|AWS X-Ray|分散されたアプリケーションのデータを収集し、可視化・分析するサービス|3-4.コンテナアプリケーション
+.23+|マネジメントとガバナンス|AWS Auto Scaling|アプリケーションの負荷をモニタリングし、キャパシティを自動で調整するサービス。EC2インスタンスやECSタスク、DynamoDBテーブル、Auroraばどが対象。|3-3.エンタープライズアプリケーション
+|AWS Chatbot|SlackやAmazon Chimeにアラート通知等を行うインタラクティブエージェントサービス|
+|AWS CloudFormation|IaC(Infrastructure As Code)として、テンプレートをもとに、AWSリソース基盤を自動構築するツール|3-10.基盤自動化
+|AWS CloudTrail|マネジメントコンソールでの操作とAWS APIコールを記録するサービス|3-12.セキュリティ
+|Amazon CloudWatch|AWSリソースの様々なメトリクスやログを収集・可視化するサービス|3-2.Webアプリケーション、3-11.システム基盤運用
+|AWS CLI(Command Line Interface)|コマンドラインからAWS APIを実行するツール|3-10.基盤自動化、3-11.システム基盤運用
+|AWS Compute Optimizer|EC2とAuto Scalingのメトリクスデータを収集・分析して、コストおよびパフォーマンス最適化のレコメンデーションを行うサービス|
+|AWS Config|AWSリソースの構成情報の検索・閲覧、変更履歴の記録、通知などを行うサービス|3-11.システム基盤運用
+|AWS Control Tower|組織で複数のアカウントを管理する場合の推奨ルールに基づいた自動構成と違反操作の予防・検出ルールの適用を行うサービス|
+|Amazon Data Lifecycle Manager|EBSボリュームに保存されたデータを自動バックアップ・更新管理するサービス|
+|AWS Health|AWS のリソース、サービス、およびアカウントの状態をリアルタイムで可視化するサービス|
+|AWS Management Console|各AWSサービスをGUI上から行うコンソールアプリケーション|3-11.システム基盤運用
+|AWS OpsWorks|構成管理ツールChefやPuppetを使ってAWSリソース環境構築を行うサービス。AWS Opsworks for Chef Automate、AWS OpsWorks for Puppet Enterprise、AWS OpsWorks Stacksの３種類がある。|
+|AWS Organizations|複数のAWSアカウントにおける請求やアクセス、セキュリティ制御など組織として一元管理するためのサービス|
+|AWS Resource groups|AWSリソースを特定のフィルタ条件に従って、グループ化して管理するサービス|3-11.システム基盤運用
+|AWS Resource Groups Tagging API|作成したAWSリソースにタグを付与・削除し、リソースグループを管理するためのAPI|
+|AWS Service Catalog|管理者がユーザ向けに使用可能なAWSリソースを定義したCloudFormationテンプレートを製品カタログとして作成し、操作を制御するサービス|3-11.システム基盤運用
+|AWS Service Quotas|AWSアカウント単位で、サービス単位で制限値確認および上限緩和申請ができるサービス。|
+|AWS Systems Manager|AWSにおけるシステム運用で、ソフトウェアインベントリの収集やOSのパッチ適用、運用コマンド実行、環境変数の管理、セキュアなサーバアクセス、メンテナンス作業の自動化などを実行するサービス|3-11.システム基盤運用
+|Tag Editor|マネジメントコンソールでリソースグループに付与するタグを簡易に作成・編集・削除するGUIエディタ|
+|AWS Tools for Powershell|Windows PowerShellでAWS APIを実行できるコマンドツール群|
+|AWS Trusted Advisor|コスト・パフォーマンス・セキュリティ・フォールトトレランスの観点から既存の環境の粗を探し出し、推奨設定をアナウンスするサービス|3-12.セキュリティ
+|AWS Well Architected Tool|AWSマネジメントコンソールからQA形式でワークロードのチェックに回答し、レポート出力するサービス|
+.21+|セキュリティ、アイデンティティ、コンプライアンス
+|AWS Artifact|AWS マネジメントコンソールからコンプライアンスレポートを一括で確認できるサービス|
+|Amazon Certificate Manager|AWSの各種サービスで使用する Secure Sockets Layer/Transport Layer Security (SSL/TLS) 証明書のリクエスト、プロビジョニング、管理、およびデプロイを行うサービス|3-1.静的ホスティングWebサイト
+|Amazon Certificate Manager Private Certificate Authroity|Certificate Managerの証明書管理機能をパブリックの証明書とプライベートの証明書の両方に拡張するプライベートCA(Certificate Authroity)サービス|
+|Amazon Cloud Directory|アプリケーションの階層構造、組織構造、カタログ、ネットワークトポロジなどを管理できるディレクトリサービス|
+|Amazon Cloud HSM|顧客ごとに専用のハードウェア(FIPS 140-2 レベル 3 検証済みシングルテナント HSM クラスター)で暗号化キーを保存・管理するサービス|
+|Amazon Cognito|マネージドユーザ認証サービス、マルチデバイス間データ同期|3-5.サーバレスアプリケーション
+|Amazon Detective|Cloud TrailやVPCフローログ、GuardDutyのログを集約し、分析や調査をより迅速にかつ効率的にするためのサービス|3-11.システム基盤運用
+|AWS Directory Service|Amazon Cloud Directory およびMicrosoft Active DirectoryなどのディレクトリサービスをAWSサービスと連携させて使うためのサービス|
+|AWS Firewall Manager|複数のAWSアカウントでWAFを一元的に管理するサービス|
+|Amazon GuardDuty|悪意のある操作や不正な動作を継続的にモニタリングする脅威検出サービス|3-12.セキュリティ
+|AWS IAM(Identity & Access Management)|AWSアカウント内でユーザ、グループ、ロールなどを作成し、各サービスやリソースに対するアクセス管理を行うサービス|3-2.Webアプリケーション、3-12.セキュリティ
+|Amazon Inspector|EC2に設定したエージェントを元にセキュリティ診断を行い脆弱性を検出するサービス|3-12.セキュリティ
+|Amazon KMS(Key Management Service)|データを暗号化するキーを作成・管理するマネージドサービス|3-12.セキュリティ
+|Amazon Macie|機械学習を用いて、機密データを自動的に検出、分類、保護やアクセス履歴を記録するセキュリティサービス|3-12.セキュリティ
+|AWS RAM(Resource Access Manager)|他のアカウントで作成したAWSリソースを共有・管理するサービス|
+|AWS Secrets Manager|アプリケーションから参照するRDSなどの認証情報・シークレット情報を管理するためのサービス。|3-12.セキュリティ
+|AWS Security Hub|GuardDuty、Inspector、Macie、IAM Access Analyzer、Firewall Managerやサードパーティ製のセキュリティサービスのアラートとチェック結果を、一元的に集約・可視化するサービス|3-12.セキュリティ
+|AWS STS(Security Token Service)|AWSのサービスへのアクセスに使用できる一時的な限定権限認証情報を取得するサービス|3-4.コンテナアプリケーション
+|AWS Shield|ELB、CloudFront、Route53におけるDDoS対策を提供するサービス|3-12.セキュリティ
+|AWS Single Sign-On|Organizations、Directory Serviceと連携し、複数のAWSコンソールにログインしたり、SAML対応のSaaSサービスにシングルサインオンするサービス|
+|AWS WAF|ALB、CloudFront、API Gatewayに適用するファイアウォールサービス|3-2.Webアプリケーション
+.8+|移行と転送|AWS Application Discovery Service|クラウドへの移行に向けた既存ITシステムのデータ取集サービス|
+|AWS Database Migration Service|オンプレミスやEC2上に構築したデータベースなどからのAWSのマネージドデータストア、Kinesis、MSKなどへデータ移行するサービス|
+|AWS DataSync|オンプレミスストレージとS3やEFS間のデータの移動を自動化するデータ転送サービス|
+|AWS Migration Hub|移行サービスであるApplication Discovery ServiceやDatabase Migration Service、Server Migration Serviceに関する移行サマリダッシュボードを統合したサービス|
+|AWS Schema Conversion Tool|ソースとなるデータベースのスキーマ、ビュー、ストアドプロシージャなどをマネージドデータベースへ移行するサービス|
+|AWS Server Migration Service|VMWareやHyper-V、Azure上に構築したマシンイメージをAWSへ移行するサービス|
+|AWS Snowball|AWSが高性能のストレージを貸し出し、オンプレミスのデータをS3へ物理的にデータ移送・転送するサービス|
+|AWS Transfer Family|SFTP、FTP、FTPSプロトコルを用いて、S3との間で直接ファイル転送を行うサービス|
+.4+|モバイル|AWS Amplify|モバイルアプリケーションのバックエンドサービスをサーバレスで自動セットアップするライブラリ|
+|AWS AppSync|GraphQLをベースとしたフルマネージドアプリケーションサービス|
+|AWS Device Farm|AWSクラウド上でデバイスの実機を使用してモバイルおよびWebアプリケーションのテストを行うサービス|
+|Amazon Pinpoint|プッシュ通知、Eメール、SMS テキストメッセージ、または音声メッセージを送信するサービス|
+.21+|機械学習
+|Amazon Augmented AI(A2I)|推論結果レビューの人的リソースを含めたワークフローを作成・実行するサービス|3-8.AI/ML/DL
+|Amazon CodeGuru Profiler|アプリケーションのソースコードのプロファイルを行い、パフォーマンスの問題点を機械学習を用いて自動的に識別し、修正方法を提案するサービス|3-8.AI/ML/DL
+|Amazon CodeGuru Reviewer|GitHubやCodeCommit上のソースコードのレビューを行い、機械学習を用いて問題点を指摘するサービス|3-8.AI/ML/DL
+|Amazon Comprehend|機械学習を使用してテキスト内で固有名詞・キーワード抽出や感情分析を行う自然言語処理 (NLP) サービス|3-8.AI/ML/DL
+|Amazon Forcast|機械学習を使用して時系列に整理されたデータから予測を行うサービス|3-8.AI/ML/DL
+|Amazon Fraud Detector|機械学習を使用して不正なアクティビティを検出するサービス|3-8.AI/ML/DL
+|Amazon Kendra|機械学習を使用してインデックスを構築し、精度の高い検索を提供するサービス|3-8.AI/ML/DL
+|Amazon Lex|機械学習を使用して、アプリケーションに音声やテキストなどの対話型インターフェイスを構築するサービス|3-8.AI/ML/DL
+|Amazon Personalize|機械学習を使用して、レコメンデーションを作成するサービス|3-8.AI/ML/DL
+|Amazon Polly|機械学習を使用して、テキストを音声に変換するサービス|3-8.AI/ML/DL
+|Amazon Rekognition|機械学習を使用して、画像や動画の解析処理や検出、分析を行うサービス|3-8.AI/ML/DL
+|Amazon SageMaker|機械学習(Machine Learning:ML)モデルを構築、トレーニング、デプロイするマネージドサービス|3-8.AI/ML/DL
+|Amazon Textract|機械学習を使用して、OCRのように画像データからテキストや表を抽出するサービス|3-8.AI/ML/DL
+|Amazon Translate|機械学習を使用した、高度なテキスト翻訳サービス|3-8.AI/ML/DL
+|Amazon Transcribe|機械学習を使用して、音声をテキストに変換し、アプリケーションに自動音声認識 (Automatic Speech Recognition) 機能を追加するサービス|3-8.AI/ML/DL
+|AWS Deep Learning AMIs|一般的な深層学習フレームワークとインターフェイスが事前インストールされたAMI|
+|AWS Deep Learning Containers|一般的な深層学習フレームワークとインターフェイスが事前インストールされたDockerコンテナ|
+|AWS DeepComposer|機械学習を使用して、音楽を生成するサービス。主に機械学習を学ぶための用途。|3-8.AI/ML/DL
+|AWS DeepLens|深層学習に対応したビデオカメラ。主に機械学習を学ぶための用途|3-8.AI/ML/DL
+|AWS DeepRacer|機械学習を使用して駆動する1/18スケールのレースカーと3Dレーシングシミュレータ。主に機械学習を学ぶための用途|3-8.AI/ML/DL
+|Apache MXNet on AWS|オープンソースの深層学習フレームワークApache MXNetをAWS上で実行するための統合サービス|
+.8+|メディアサービス|Amazon Elastic Transcoder|動画ファイルをさまざまなデバイスに対応した動画ファイルへ変換できるサービス|
+|AWS Elemental MediaConnect|AWSグローバルネットワークを通じて安全に複数の送信先に送信できる高品質なライブ動画伝送サービス|
+|AWS Elemental MediaConvert|動画ファイルのブロードキャスト配信や変換・高度な編集ができるサービス|
+|AWS Elemental MediaLive|高品質のライブ動画ストリームを信頼性の高い使いやすい方法で高速配信する、クラウドベースのライブ動画エンコードサービス|
+|AWS Elemental MediaPackage|配信環境に応じて様々なフォーマットやデータほぼのための暗号化などを提供するサービス|
+|AWS Elemental MediaStore|メディア配信向けに高速化・最適化されたストレージサービス|
+|AWS Elemental MediaTallor|ビデオストリームに広告を個別に挿入するサービス|
+|AWS Elemental Appliances & Software|AWSの動画配信サービスのオンプレミス向けソリューション|
+.6+|エンドユーザコンピューティング|Amazon Workspaces|VPC内に構築する、開発用途等で使用する仮想デスクトップサービス|3-13.開発環境
+|Amazon AppStream 2.0|デスクトップアプリケーションをブラウザ上で実行するアプリケーションストリーミングサービス|
+|Amazon WorkDocs|WindowsおよびMacOSで使用可能なセキュアなストレージおよびファイル共有マネージドサービス|
+|Amazon WorkLink|モバイルから社内のウェブサイトやウェブアプリケーションに安全かつ簡単にアクセスできるようにするサービス|
+|Amazon WAM(Workspaces Application Manager)|WorkSpaces向けのアプリケーションをデプロイ・管理するサービス|
+|NICE DCV|HPC向けのリモートアクセスソフトウェア|
+.3+|ビジネスアプリケーション|Alexa for Business|Amazon Echoの音声インターフェースAlexaをビジネスで利用するためのサービス|
+|Amazon Chime|音声・動画通話、チャット、画面共有が可能なオンラインWeb会議サービス|
+|Amazon WorkMail|企業向けEメールおよびカレンダーのマネージドサービス|
+.10+|IoT|AWS IoT Core|AWSクラウドへのセキュア接続や認証、リクエストの受付やメッセージのルーティングを行う、数十万規模のデバイスのデータ収集・リモート制御を目的としたサービス|3-9.IoT
+|FreeRTOS|マイクロコントローラ向けのオープンソースのIoTオペレーティングシステム|3-9.IoT
+|AWS IoT Analytics|IoTデバイスから送信されたデータを収集、処理、保存、解析、可視化するサービス|3-9.IoT
+|AWS IoT Device Defender|デバイスの監査、アノマリー検出・アラート通知などを行うサービス|3-9.IoT
+|AWS IoT Device Management|(大量の)デバイスの導入、整理、監視、リモート管理、ファームアップデート、パッチ管理を行うサービス|3-9.IoT
+|AWS IoT Events|デバイスから収集されたデータを継続的に監視し、定義したDetector Modelに従ってイベントを検出、アクションを実行するサービス|3-9.IoT
+|AWS IoT Greengrass|エッジコンピューティング環境を実現するためのデバイスにインストールするソフトウェアおよびサーバのサービス|3-9.IoT
+|AWS IoT SiteWise|Snowball Edgeなどのゲートウェイデバイスで動作するAWSクラウドへデータをセキュアに送信するソフトウェアパッケージ|3-9.IoT
+|AWS IoT Things Graph|Greengrassに対応したエッジデバイスで実行するアプリケーションを、モデルを用いて視覚的に設計するUIツール|3-9.IoT
+|AWS IoT 1-Click|AWS IoT エンタープライズボタン、SORACOM LTE-Mボタンといった専用のデバイスからLambdaFunctionを実行するためのサービス|3-9.IoT
+|ブロックチェーン|Amazon Managed Blockchain|オープンソースフレームワークHyperledger FabricやEthereum*を使用したスケーラブルなブロックチェーンネットワークを構築するサービス|
+.2+|ゲーム開発|Amazon GameLift|マルチプレイヤーのオンラインゲームをホスティングするサービス|
+|Amazon Lumberyard|ハイクオリティな3Dゲームを実行するためのゲームエンジン|
+|拡張現実(AR)とバーチャルリアリティ(VR)|Amazon Sumerian|Webブラウザ上でVR/ARコンテンツを作成・ビルド・起動するサービス|
+|ロボット工学|AWS RoboMaker|オープンソースのロボットソフトウェアプラットフォームであるRobot Operating System（ROS）を用いた開発をAWS上で実行するためのサービス|
+|衛星|AWS Ground Station|人工衛星のデータ受信に必要な地上局を提供し、衛星とデータ受信を行うサービス|
+|Quantum Technologies|Amazon Braket|量子アルゴリズムの開発、量子コンピュータシミュレーションによるアルゴリズムテスト、実行を行うサービス|
+|CustomerEnablement|AWS IQ|組織とAWS認定の専門家を直接マッチングし、プロジェクト管理が行えるサービス|
+|===
+
+== AWSのサービスの利用方法
+
+上記のAWSクラウド環境やサービスを利用するには、まずAWSのサイト上でアカウントを作成します。
+アカウント作成には連絡先や支払情報、本人確認が必要になりますが、作成自体は無料で行うことができ、
+また、作成から1年間、限定された条件のもとでEC2やS3といった60以上のサービスを無料で使用することができます。
+
+AWSのサービスを利用するには以下、3つの方法で行います。
+
+[cols="3,7"]
+|===
+|方法|概要
+|AWSマネジメントコンソール|AWSのサイトからログインできるマネジメントコンソールというGUIでアクセスして、各サービスを実行・利用します。幅広いユーザに一般的によく利用される方法で、視覚的に分かりやすいため、サービス運用状況の確認などでも利用されます。
+|AWS CLI(Command Line Interface)|自身のパソコン端末にあるターミナルなどのコマンドラインを実行し、各サービスを実行・利用する方法です。AWS上に展開するアプリケーションを開発する場合など、高速に、繰り返しサービスを起動・実行・停止する場合の用途が適しています。
+|AWS SDK(Software Developers Kit)|主にアプリケーションから利用されることを想定した、AWSが提供するSDKと呼ばれるライブラリを使ったアクセス方法です。2020年5月時点では、C++、Go、Java、JavaScript、.NET、PHP、Python、Rubyといった8種類のプログラム言語にそれぞれSDKが提供され、開発したアプリケーションの処理の中でSDKのライブラリをコールしてAWSサービスへアクセスします。
+|===
+
+== AWSが提供するSDKやツールキット
+
+AWSではアクセスに使われるSDKに加えて、以下のようなプログラミング言語の実行ランタイムやツールキットも提供しています。
+
+[cols="3,7"]
+|===
+|ツール|概要
+|AWS Cloud Development Kit|CloudFormationテンプレートをTypeScriptやJavaScript、Python、Java、C#などのプログラミング言語で生成するツール
+|Amazon Corretto|Amazonが提供するJava言語の実行ランタイムおよび開発キットであるJDK(Java Developers Kit)
+|AWS DynamoDB Encryption for Java|DynamoDBに暗号化アクセスを行うJava向けライブラリ
+|AWS DynamoDB Encryption for Python|DynamoDBに暗号化アクセスを行うPython向けライブラリ
+|AWS Encryption SDK(Software Developers Kit) for C|C言語向けの暗号化を行うライブラリ
+|AWS Encryption SDK(Software Developers Kit) for CLI|CLI向けの暗号化を行うライブラリ
+|AWS Encryption SDK(Software Developers Kit) for Java|Java向けの暗号化を行うライブラリ
+|AWS Encryption SDK(Software Developers Kit) for JavaScript|JavaScript向けの暗号化を行うライブラリ
+|AWS Encryption SDK(Software Developers Kit) for Python|Python向けの暗号化を行うライブラリ
+|AWS MobileSDK(Software Developers Kit) for Android|Android向けのAWS APIアクセスを行うライブラリ
+|AWS MobileSDK(Software Developers Kit) for iOS|iOS向けのAWS APIアクセスを行うライブラリ
+|AWS MobileSDK(Software Developers Kit) for Unity|Unity向けのAWS APIアクセスを行うライブラリ
+|AWS MobileSDK(Software Developers Kit) for Xamarin|Xamarin向けのAWS APIアクセスを行うライブラリ
+|AWS SAM(Serverless Application Moddel)|AWS上でサーバレスアプリケーションを構築するためのオープンソースフレームワーク
+|AWS SDK for C++| C++向けのAWS APIアクセスを行うライブラリ
+|AWS SDK for Go| Go言語向けのAWS APIアクセスを行うライブラリ
+|AWS SDK for Java| Java向けのAWS APIアクセスを行うライブラリ
+|AWS SDK for JavaScript|JavaScript向けのAWS APIアクセスを行うライブラリ
+|AWS SDK for .NET| .NET(C#)向けのAWS APIアクセスを行うライブラリ
+|AWS SDK for PHP| PHP向けのAWS APIアクセスを行うライブラリ
+|AWS SDK for Python(Boto3)| Python向けのAWS APIアクセスを行うライブラリ
+|AWS SDK for Ruby| Ruby向けのAWS APIアクセスを行うライブラリ
+|AWS Toolkit for Eclipse|オープンソースの統合開発環境Eclipse向け開発サポート機能プラグイン
+|AWS Toolkit for JetBrains|JetBrains社が提供する統合開発環境IntelliJ IDEA、PyCharm、WebStorm、Rider向け開発サポート機能プラグイン
+|AWS Toolkit for Visual Studio|MicroSoft社が提供する統合開発環境Visual Studio向け開発サポート機能プラグイン
+|AWS Toolkit for Visual Studio Code|MicroSoft社が提供するVisual Studio Code向け開発サポート機能プラグイン
+|AWS Toolkit for Powershell|Windows PowerShellで実行可能なCLI(Command Line Interface)。
+|AWS Toolkit for Azure DevOps|Microsoft Azureが提供するサービスAzure DevOpsにおいて、AWSへと連携するためのプラグイン
+|===
+
+== AWSのSLA(Service Level Agreement)と責任共有モデル
+
+クラウドサービスを利用する場合は、SLAに関して理解することも重要です。例えば、AWSのユーザ企業や、システム開発請負会社が、顧客向けに何かしらのITサービスを提供する場合、
+セキュリティや可用性をはじめとした非機能要件を、クラウドベンダとどのような役割分担で満たすのか、また、顧客と契約したサービス提供レベルを守れない
+障害やセキュリティインシデントが発生した場合に、その責任や対応範囲を明確化していなければ、責任を巡るトラブルが発生しかねません。
+
+かつて、システムの請負開発案件で、オンプレミスでシステムを開発・導入・運用・保守を行う場合などでは、
+SLAを維持して運用する責任は、基本的にユーザ企業、請負会社が責任を追っていました。
+障害の中で原因が導入したミドルウェア製品の不具合にあるケースもありますが、
+
+* アプリケーションのバグ
+* オープンソースソフトウェアの不具合・脆弱性
+* 冗長化構成だったにもかかわらず発生したシステムダウン
+
+こうした原因で発生した不具合・インシデントは、基本開発したユーザ企業や請負会社側に、最終的にはITサービスを提供するユーザ企業に最終的な責任が生じます。
+
+しかし、AWSをはじめとしたクラウドサービスを利用してITサービスを提供する場合、
+クラウドベンダが提供する設備やマネージドサービスの保証レベルを見極めて、必要な対策を講じなければなりません。
+AWSは責任境界の目安として、以下の図のような責任共有レベルを定義しています。
+
+.AWSの責任共有モデルfootnote:[https://aws.amazon.com/jp/compliance/shared-responsibility-model/]
+image::aws-shared-responsibility-model.jpg[]
+
+障害やインシデントのケースに依存するのですが、一般的に以下のようなユースケースの例で責任分解を考えると分かりやすいでしょう。
+ポイントとしてはAWSのSLAの範疇を超えたものはユーザ側が責任を持って、構築・対応する必要があるということになります。
+
+[cols="3,7"]
+|===
+|ユースケース|責任範囲と対応
+|サーバやデータセンタ内ハードウェア故障で障害が発生した|AWSの施設設備(ファシリティ)やハードウェアは基本災害対策や、故障に備えた冗長化構成が組まれているので、そもそもファシリティが起因して障害発生することはまれであるが、発生した場合はAWSの定めたSLA(例えば、S3ではイレブン9の信頼性でデータが保護される)を超えた場合)に応じて、AWSが責任を負う場合もある。SLAの範囲内であればユーザ側に責任が生じる。
+|OSの最新アップデート不備でセキュリティ攻撃により被害が発生した|AWSが提供するマネージドとなる、ホスト環境のハイパーバイザOSやミドルウェアは随時・適宜最新化されるので、クラウド環境の脆弱性が起因してインシデント発生することはまれである。ゲストOS以上で発生した障害・セキュリティインシデント場合は構築したユーザ(開発委託された会社やエンドユーザ)側が責任を負う。
+|アプリケーションのシステム基盤(OSやミドルウェア)の不備・障害が発生した|ゲストOS以上で発生した不具合のため、構築したユーザ(開発委託された会社やユーザ企業)側が責任を負う。ただし、マネージドサービスでSLAが守られずに発生したもの(例えば、RDSのフェイルオーバーが想定外に失敗した等)はAWS側に責任が生じる。
+|===
