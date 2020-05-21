@@ -14,7 +14,7 @@
 :figure-caption: Figure
 :docname: = 2-1.AWS
 :revnumber: 0.1
-:revdate: 2020/5/16
+:revdate: 2020/5/22
 
 = AWSの概要
 
@@ -158,7 +158,7 @@ AWSサービスの中で中核となるサービスや、使用頻度の高い�
 |AWS SAM(Serverless Application Model)|サーバレスアプリケーションを簡単に実装するためのCLIおよびオープンソースフレームワーク。CloudFormationを拡張したSAMテンプレートを作成することで、API GatewayやLambda、DynamoDBなどの環境を簡易構築できる。|3-5.サーバレスアプリケーション
 |AWS Severless Application Repository|サーバレスアプリケーションを共有・公開するためのレポジトリサービス。|
 .10+|ネットワーキングとコンテンツ配信|Amazon API Gateway|APIの作成、公開を行うサービス。|3-5.サーバレスアプリケーション
-|AWS App Mesh|オープンソースEnvoyを利用して、ECSやEKSなどに構築したサービス間で通信を行うサービスメッシュ。|
+|AWS App Mesh|オープンソースEnvoyを利用して、ECSやEKSなどに構築したサービス間で通信を行うサービスメッシュ。|3-4.コンテナアプリケーション
 |AWS Cloud map|EC2、ECS、S3、SQSなどのAWSリソースを含めたサービスディスカバリ。|
 |Amazon CloudFront|静的コンテンツキャッシュなどを実現するCDN(Content Delivery Network:コンテンツ配信ネットワーク)サービス。|3-1.静的ホスティングWebサイト
 |AWS Direct Connect|オンプレミスとの専用線接続サービス|3-3.エンタープライズアプリケーション
@@ -175,7 +175,7 @@ AWSサービスの中で中核となるサービスや、使用頻度の高い�
 |Amazon S3(Simple Storage Service)|ログ保存、バックアップ、静的ホスティング等多様な用途のオンラインストレージ|3-1.静的ホスティングWebサイト、3-4.コンテナアプリケーション
 |Amazon S3 Glacier|S3でのアーカイブ用途低コストオンラインストレージ|3-3.エンタープライズアプリケーション
 |AWS Snowball|オンプレミスからクラウドへデータを物理移送するマイグレーションサポートサービス|
-|AWS Storage Gateway|オンプレミス向けストレージ|
+|AWS Storage Gateway|オンプレミス向けストレージ|3-3.エンタープライズアプリケーション
 .9+|データベース|Amazon Aurora|クラウド環境最適化リレーショナルデータベース|3-4.コンテナアプリケーション
 |Amazon DocumentDB|オープンソースデータベースMongoDBとの互換性をもつドキュメント指向データベース|
 |Amazon DynamoDB|スケーラブルな特性をもつ、NoSQLスキーマレスデータベース|3-4.コンテナアプリケーション
@@ -183,14 +183,14 @@ AWSサービスの中で中核となるサービスや、使用頻度の高い�
 |Amazon Keyspaces(for Apache Cassandra)|オープンソースデータベースApache Cassadraを利用したマネージドスケーラブルNoSQLデータベース|
 |Amazon Neptune|マネージドグラフ型データベース|
 |Amazon QLDB|フルマネージド台帳型データベース|
-|Amazon RDS(Relational Database Service)|オープンソースおよびプロプライエタリのマネージドリレーショナルデータベース|3-2.Webアプリケーションk、3-3.エンタープライズアプリケーション
+|Amazon RDS(Relational Database Service)|オープンソースおよびプロプライエタリのマネージドリレーショナルデータベース|3-2.Webアプリケーション、3-3.エンタープライズアプリケーション
 |Amazon Redshift|ビッグデータ解析用データウェアハウス|3-7.データアナリティクス/ビッグデータ解析
 .7+|アプリケーション統合|Amazon AppFlow|Salesforce、SlackなどのSaaSアプリケーションとS3、Redshiftなどにデータを連携するサービス|
 |Amazon EventBridge|DatadogなどのSaaSやカスタムアプリケーションとAWSサービス間でイベントデータを連携するサービス|
 |Amazon MQ(Message Queue)|オープンソースソフトウェアApache ActiveMQを利用したマネージドメッセージブローカーサービス|
 |Amazon SNS(Simple Notification Service)|スケーラブルなプッシュ配信型メッセージ送信|3-6.DevOps
 |Amazon SQS(Simple Queue Service)|スケーラブルな完全マネージド型メッセージキューサービス|3-3.エンタープライズアプリケーション
-|AWS StepFunctions|AWS Lambdaで定義した関数をワークフロー式に実行するためのサービス|
+|AWS StepFunctions|AWS Lambdaで定義した関数をワークフロー式に実行するためのサービス|3-5.サーバレスアプリケーション
 |Amazon SWF(Simple Workflow)|AWS Flow Frameworkというフレームワークを用いて、JavaおよびRuby言語でバッチタスクをワークフローで実行するためのフルマネージドサービス|
 .12+|分析|Amazon Athena|S3に保存されたデータに対してSQLを発行してデータを取得・分析できるサービス|3-7.データアナリティクス/ビッグデータ解析
 |Amazon CloudSearch|Webサイトやアプリケーション向けのマネージド検索エンジンサービス。|
@@ -225,7 +225,7 @@ AWSサービスの中で中核となるサービスや、使用頻度の高い�
 |AWS Health|AWS のリソース、サービス、およびアカウントの状態をリアルタイムで可視化するサービス|
 |AWS Management Console|各AWSサービスをGUI上から行うコンソールアプリケーション|3-11.システム基盤運用
 |AWS OpsWorks|構成管理ツールChefやPuppetを使ってAWSリソース環境構築を行うサービス。AWS Opsworks for Chef Automate、AWS OpsWorks for Puppet Enterprise、AWS OpsWorks Stacksの３種類がある。|
-|AWS Organizations|複数のAWSアカウントにおける請求やアクセス、セキュリティ制御など組織として一元管理するためのサービス|
+|AWS Organizations|複数のAWSアカウントにおける請求やアクセス、セキュリティ制御など組織として一元管理するためのサービス|3-11.システム基盤運用
 |AWS Resource groups|AWSリソースを特定のフィルタ条件に従って、グループ化して管理するサービス|3-11.システム基盤運用
 |AWS Resource Groups Tagging API|作成したAWSリソースにタグを付与・削除し、リソースグループを管理するためのAPI|
 |AWS Service Catalog|管理者がユーザ向けに使用可能なAWSリソースを定義したCloudFormationテンプレートを製品カタログとして作成し、操作を制御するサービス|3-11.システム基盤運用
